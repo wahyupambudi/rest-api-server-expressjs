@@ -28,7 +28,7 @@ router.get("/", function (req, res) {
   );
 });
 
-// POST STORE
+// Insert Data to Database
 router.post(
   "/add",
   [
@@ -85,5 +85,41 @@ router.post(
     );
   }
 );
+
+// Detail Data with kd_brg
+router.get("/(:kd_brg)", function (req, res) {
+  // inisialisasi kd_brg
+  let kd_brg = req.params.kd_brg;
+  // console.log(kd_brg);
+  // console.log(typeof kd_brg);
+
+  koneksi.query(
+    `SELECT * FROM tb_barang WHERE kd_brg = "${kd_brg}"`,
+    function (err, rows) {
+      if (err) {
+        return res.status(500).json({
+          status: false,
+          message: "Internal Server Error",
+        });
+      }
+
+      // if data not found
+      if (rows.length <= 0) {
+        res.status(404).json({
+          status: false,
+          message: "Data Tidak Tersedia",
+        });
+      }
+      // if data found
+      else {
+        res.status(200).json({
+          status: true,
+          message: "Detail Data Barang",
+          data: rows[0],
+        });
+      }
+    }
+  );
+});
 
 module.exports = router;
