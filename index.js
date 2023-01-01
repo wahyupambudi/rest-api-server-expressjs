@@ -2,6 +2,12 @@ const express = require("express");
 const app = express();
 const port = 2023;
 
+// import library POST
+let cors = require("cors");
+
+// use cors
+app.use(cors());
+
 // import body parser
 const bodyParser = require("body-parser");
 
