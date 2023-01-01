@@ -72,7 +72,7 @@ router.post(
         if (err) {
           return res.status(500).json({
             status: false,
-            message: "Internal Server Error",
+            message: "Data Barang Gagal Di Simpan",
           });
         } else {
           return res.status(201).json({
@@ -121,5 +121,65 @@ router.get("/(:kd_brg)", function (req, res) {
     }
   );
 });
+
+// Update Data Barang
+router.put(
+  "/update/:kd_brg",
+  [
+    // validation
+    body("kd_brg").notEmpty(),
+    body("nm_brg").notEmpty(),
+    body("spek_brg").notEmpty(),
+    body("jml_brg").notEmpty(),
+    body("kondisi_brg").notEmpty(),
+    body("tgl_buy_brg").notEmpty(),
+    body("harga_brg").notEmpty(),
+    body("img_brg").notEmpty(),
+  ],
+  (req, res) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(422).json({
+        errors: errors.array(),
+      });
+    }
+    // kd_brg post
+    let kd_brg = req.params.kd_brg;
+
+    // data post
+    let formData = {
+      kd_brg: req.body.kd_brg,
+      nm_brg: req.body.nm_brg,
+      spek_brg: req.body.spek_brg,
+      jml_brg: req.body.jml_brg,
+      kondisi_brg: req.body.kondisi_brg,
+      tgl_buy_brg: req.body.tgl_buy_brg,
+      harga_brg: req.body.harga_brg,
+      img_brg: req.body.img_brg,
+      // token: req.body.kd_brg,
+    };
+
+    // update query
+    koneksi.query(
+      `UPDATE tb_barang SET ? WHERE kd_brg = "${kd_brg}"`,
+      formData,
+      function (err, rows) {
+        // jika error
+        if (err) {
+          return res.status(500).json({
+            status: false,
+            message: "Data Barang Gagal Di Update",
+          });
+        } else {
+          return res.status(200).json({
+            status: true,
+            message: "Data Barang Berhasil Di Update",
+          });
+        }
+      }
+    );
+  }
+);
 
 module.exports = router;
