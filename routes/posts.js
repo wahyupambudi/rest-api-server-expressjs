@@ -182,4 +182,39 @@ router.put(
   }
 );
 
+// delete data barang
+router.delete("/delete/(:kd_brg)", function (req, res) {
+  // inisialisasi kodebarang dari urls
+  let kd_brg = req.params.kd_brg;
+
+  // query delete databarang where kd_brg
+  koneksi.query(
+    `DELETE FROM tb_barang WHERE kd_brg = "${kd_brg}"`,
+    function (err, rows) {
+      // kondisi jika error
+      if (err) {
+        res.status(500).json({
+          status: false,
+          message: "Internal Server Error",
+        });
+      }
+      // kondisi jika tidak terjadi perubahan rows
+      rowData = rows.affectedRows;
+      if (rowData == 0) {
+        res.status(500).json({
+          status: false,
+          message: "Data Barang Gagal Di Hapus",
+        });
+      }
+      // jika data berhasil di hapus
+      else {
+        res.status(200).json({
+          status: true,
+          message: "Data Barang Berhasil Di Hapus",
+        });
+      }
+    }
+  );
+});
+
 module.exports = router;
